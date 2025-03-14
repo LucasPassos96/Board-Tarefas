@@ -1,24 +1,42 @@
-import styles from './styles.module.css'
-import Link from 'next/link'
+import { useSession, signIn, signOut } from "next-auth/react";
+import styles from "./styles.module.css";
+import Link from "next/link";
 
 export function Header() {
-    return (
-        <header className={styles.header}>
-            <section className={styles.content}>
-                <nav className={styles.nav}>
-                   <Link href="/">
-                   <h1 className={styles.Logo}>Tarefas<span>+</span></h1>
-                   </Link>
+  const { data: session, status } = useSession();
 
-                   <Link href="/dashboard" className={styles.link}>
-                    Meu Painel
-                   </Link>
-                </nav>
+  return (
+    <header className={styles.header}>
+      <section className={styles.content}>
+        <nav className={styles.nav}>
+          <Link href="/">
+            <h1 className={styles.Logo}>
+              Tarefas<span>+</span>
+            </h1>
+          </Link>
 
-                <button className={styles.loginButton}>
-                    Acessar
-                </button>
-            </section>
-        </header>
-    )
+          {session?.user && (
+            <Link href="/dashboard" className={styles.link}>
+              Meu Painel
+            </Link>
+          )}
+        </nav>
+
+        {status === "loading" ? (
+          <></>
+        ) : session ? (
+          <button className={styles.loginButton} onClick={() => signOut()}>
+            Olá {session?.user?.name}
+          </button>
+        ) : (
+          <button
+            className={styles.loginButton}
+            onClick={() => signIn("google")}
+          >
+            Acessar
+          </button>
+        )}
+      </section>
+    </header>
+  );
 }
