@@ -8,7 +8,7 @@ import { FaTrash } from "react-icons/fa";
 
 
 import { db } from "../../services/firebaseConnection";
-import { doc, addDoc, collection, query, where, getDoc, getDocs } from "firebase/firestore";
+import { doc, addDoc, collection, query, where, getDoc, getDocs, deleteDoc } from "firebase/firestore";
 
 interface TaskProps {
   item: {
@@ -67,6 +67,23 @@ export default function Task({ item, allComments }: TaskProps) {
   
   }
 
+    async function handleDeleteComment(id: string) {
+
+        try {
+            const docRef = doc(db, "comentarios", id);
+            await deleteDoc(docRef);
+
+            const deleteComment = comments.filter((comment) => comment.id !== id);
+
+            setComments(deleteComment);
+
+            // TODO: toast de delete
+        } catch(err) {
+            console.log(err)
+        }
+    }
+  
+
   return (
     <div className={styles.container}>
       <Head>
@@ -112,7 +129,10 @@ export default function Task({ item, allComments }: TaskProps) {
                         {item.name}
                     </label>
                     {item.user === session?.user?.email && (
-                        <button className={styles.buttonTrash}>
+                        <button 
+                        className={styles.buttonTrash}
+                        onClick={() => handleDeleteComment(item.id)}
+                        >
                             <FaTrash size={18} color="#ea3140"/>
                         </button>
                     )}
