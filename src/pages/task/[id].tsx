@@ -4,6 +4,8 @@ import { GetServerSideProps } from "next";
 import { Textarea } from "@/components/textarea";
 import Head from "next/head";
 import styles from "./styles.module.css";
+import { FaTrash } from "react-icons/fa";
+
 
 import { db } from "../../services/firebaseConnection";
 import { doc, addDoc, collection, query, where, getDoc, getDocs } from "firebase/firestore";
@@ -48,7 +50,15 @@ export default function Task({ item, allComments }: TaskProps) {
             name: session?.user?.name,
             taskId: item?.taskId
         });
-
+        
+        const commentData = {
+            id: docRef.id,
+            comment: input,
+            user: session?.user?.email,
+            name: session?.user?.name,
+            taskId: item?.taskId
+        }
+        setComments((oldComments) => [...oldComments, commentData])
         setInput("");
 
     } catch(err) {
@@ -97,6 +107,16 @@ export default function Task({ item, allComments }: TaskProps) {
 
         {comments.map((item) => (
             <article key={item.id} className={styles.comment}>
+                <div className={styles.headComment}>
+                    <label className={styles.commentsLabel}>
+                        {item.name}
+                    </label>
+                    {item.user === session?.user?.email && (
+                        <button className={styles.buttonTrash}>
+                            <FaTrash size={18} color="#ea3140"/>
+                        </button>
+                    )}
+                </div>
                 <p>
                     {item.comment}
                 </p>

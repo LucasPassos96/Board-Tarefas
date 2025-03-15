@@ -25,7 +25,7 @@ export function Header() {
         {status === "loading" ? (
           <></>
         ) : session ? (
-          <button className={styles.loginButton} onClick={() => signOut()}>
+          <button className={styles.loginButton} onClick={() => signOut({ callbackUrl: "/" })}>
             Olá {session?.user?.name}
           </button>
         ) : (
