@@ -13,7 +13,8 @@ export const authOptions = {
             // }
         })
     ],
-    secret: process.env.JWT_SECRET as string,
+    // secret: process.env.JWT_SECRET as string,
+    secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET as string
     
 }
 
