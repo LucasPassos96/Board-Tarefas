@@ -46,7 +46,7 @@ export default function Dashboard({ user }: DashboardProps) {
       const q = query(
         tarefasRef,
         orderBy("created_at", "desc"),
-        where("user", "==", user?.email)
+        // where("user", "==", user?.email)
       );
 
       onSnapshot(q, (snapshot) => {
